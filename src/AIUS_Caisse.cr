@@ -1,5 +1,7 @@
-require "./AIUS_Caisse/*"
+require "kemal"
 
-module AIUSCaisse
-  # TODO Put your code here
+get "/" do
+  "Vous êtes tous chou !"
 end
+
+Kemal.run
