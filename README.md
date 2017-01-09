@@ -1,14 +1,19 @@
 # AIUS_Caisse
 
-TODO: Write a description here
+Caisse pour l'AIUS écrite en Crystal.
 
 ## Installation
 
-TODO: Write installation instructions here
+* Installation du compilateur de [Crystal](https://crystal-lang.org/docs/installation/index.html) ;
+* Installation de [kemal](http://kemalcr.com/docs/getting_started/) ;
+* Faire un git clone du dépot.
 
 ## Usage
 
-TODO: Write usage instructions here
+Pour compiler : 
+	crystal deps build
+Pour lancer : 
+	./bin/AIUS_Caisse
 
 ## Development
 
