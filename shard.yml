@@ -1,0 +1,13 @@
+name: AIUS_Caisse
+version: 0.1.0
+
+authors:
+  - caswitch <mariefrance.kom@gmail.com>
+
+targets:
+  AIUS_Caisse:
+    main: src/AIUS_Caisse.cr
+
+crystal: 0.20.4
+
+license: MIT
