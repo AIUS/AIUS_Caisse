@@ -54,6 +54,10 @@ post "/products" do |context|
 	context.db.exec "INSERT INTO product (name, price) VALUES ($1, $2)", "KitKat", 0.50 
 end
 
+delete "/product/:id" do |context|
+	id = context.params.url["id"]
+	context.db.exec "DELETE FROM product WHERE id = $1", id
+end
 
 Kemal.run
 
