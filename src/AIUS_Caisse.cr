@@ -44,7 +44,23 @@ class Product
 end
 
 get "/products" do |context|
-	Product.from_rs(context.db.query("SELECT id, name, category, price FROM product")).to_json
+	Product.from_rs(context.db.query "SELECT id, name, category, price FROM product").to_json
+end
+
+class Category
+	DB.mapping({
+		id: Int32,
+		name: String
+	})
+
+	JSON.mapping({
+		id: Int32,
+		name: String
+	})
+end
+
+get "/categories" do |context|
+	Category.from_rs(context.db.query "SELECT id, name FROM product_category").to_json
 end
 
 Kemal.run
