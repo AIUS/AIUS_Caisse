@@ -66,8 +66,30 @@ get "/categories" do |context|
 	Category.from_rs(context.db.query "SELECT id, name FROM product_category").to_json
 end
 
+def error(message)
+	{
+		"status" => "error",
+		"message" => message,
+	}.to_json
+end
+
 post "/products" do |context|
-	context.db.exec "INSERT INTO product (name, price) VALUES ($1, $2)", "KitKat", 0.50 
+	name = context.params.json["name"]?.as?(String)
+	p = context.params.json["price"]?
+	price = p.as?(Int64) || p.as?(Float64)
+
+	if name.nil?
+		error "missing `name` field"
+	elsif p.nil?
+		error "missing `price` field"
+	elsif price.nil?
+		error "`price` has to be a number"
+	elsif price < 0
+		error "`price` can't be < 0"
+	else
+		new_id = context.db.scalar "INSERT INTO product (name, price) VALUES ($1, $2) RETURNING id", name, price
+		(context.db.query_one "SELECT id, name, category, price FROM product WHERE id = $1", new_id, as: Product).to_json
+	end
 end
 
 delete "/product/:id" do |context|
