@@ -1,32 +1,59 @@
-# AIUS_Caisse
+# aius_caisse — Une micro-caisse pour une grande association
 
-Caisse pour l'AIUS écrite en Crystal.
+Caisse pour l’AIUS écrite en Crystal.
 
-## Installation
+## Construction
 
-* Installation du compilateur de [Crystal](https://crystal-lang.org/docs/installation/index.html) ;
-* Installation de [kemal](http://kemalcr.com/docs/getting_started/) ;
-* Faire un git clone du dépot.
+1. Installer le compilateur de [Crystal](https://crystal-lang.org/docs/installation/index.html) ;
+2. cloner le dépôt ;
+3. `crystal deps build` ;
+4. Qapla’.
 
-## Usage
+## Utilisation
 
-Pour compiler : 
+Pour compiler : 
+
 	crystal deps build
-Pour lancer : 
-	./bin/AIUS_Caisse
 
-## Development
+Pour exécuter : 
 
-TODO: Write development instructions here
+	$ ./bin/aius_caisse --help
+	
+	    -b HOST, --bind HOST             Host to bind (defaults to 0.0.0.0)
+	    -p PORT, --port PORT             Port to listen for connections (defaults to 3000)
+	    -s, --ssl                        Enables SSL
+	    --ssl-key-file FILE              SSL key file
+	    --ssl-cert-file FILE             SSL certificate file
+	    -h, --help                       Shows this help
 
-## Contributing
+	$ ./bin/aius_caisse
+	[development] Kemal is ready to lead at http://0.0.0.0:3000
 
-1. Fork it ( https://github.com/[your-github-name]/AIUS_Caisse/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+	^C
+	Kemal is going to take a rest!
 
-## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) caswitch - creator, maintainer
+## API REST
+
+### `GET /products`
+
+### `POST /products`
+
+### `GET /product/:id`
+
+### `DELETE /product/:id`
+
+### `PUT /product/:id`
+
+### `GET /categories`
+
+## Développement
+
+XXX: Fill me
+
+## Contributeurs
+
+- Luka Vandervelden
+- Marie-France Kommer
+- Quentin Gliech
+
