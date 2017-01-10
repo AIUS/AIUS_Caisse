@@ -31,14 +31,17 @@ class Product
 	DB.mapping({
 		id: Int32,
 		name: String,
-		category: Int32,
+		category: {
+			type: Int32,
+			nilable: true,
+		},
 		price: Float64,
 	})
 
 	JSON.mapping({
 		id: Int32,
 		name: String,
-		category: Int32,
+		category: Int32 | Nil,
 		price: Float64,
 	})
 end
@@ -47,4 +50,11 @@ get "/products" do |context|
 	Product.from_rs(context.db.query("SELECT id, name, category, price FROM product")).to_json
 end
 
+post "/products" do |context|
+	context.db.exec "INSERT INTO product (name, price) VALUES ($1, $2)", "KitKat", 0.50 
+end
+
+
 Kemal.run
+
+
