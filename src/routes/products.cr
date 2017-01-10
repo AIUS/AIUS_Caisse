@@ -3,84 +3,12 @@ require "kemal"
 require "db"
 require "pg"
 
-class HTTP::Server::Context
-	def db=(@db : DB::Database)
-	end
-	def db
-		@db.as DB::Database
-	end
-end
+require "../error"
 
-class CustomHandler < Kemal::Handler
-	def call(context)
-		DB.open "postgres:///aius_caisse" do |db|
-			context.db = db
-
-			call_next context
-		end
-	end
-end
-
-add_handler CustomHandler.new
-
-get "/" do |context|
-	context.db.to_s
-end
-
-class Product
-	def name=(@name) end
-	def category=(@category) end
-	def price=(price)
-		if price < 0
-			raise "price cant be negative"
-		end
-
-		@price = price
-	end
-
-	DB.mapping({
-		id: Int32,
-		name: String,
-		category: {
-			type: Int32,
-			nilable: true,
-		},
-		price: Float64,
-	})
-
-	JSON.mapping({
-		id: Int32,
-		name: String,
-		category: Int32 | Nil,
-		price: Float64,
-	})
-end
+require "../product"
 
 get "/products" do |context|
 	Product.from_rs(context.db.query "SELECT id, name, category, price FROM product").to_json
-end
-
-class Category
-	DB.mapping({
-		id: Int32,
-		name: String
-	})
-
-	JSON.mapping({
-		id: Int32,
-		name: String
-	})
-end
-
-def error(message)
-	{
-		"status" => "error",
-		"message" => message,
-	}.to_json
-end
-
-get "/categories" do |context|
-	Category.from_rs(context.db.query "SELECT id, name FROM product_category").to_json
 end
 
 get "/product/:id" do |context|
@@ -141,7 +69,4 @@ put "/product/:id" do |context|
 		product.to_json
 	end
 end
-
-Kemal.run
-
 

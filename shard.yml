@@ -5,8 +5,8 @@ authors:
   - caswitch <mariefrance.kom@gmail.com>
 
 targets:
-  AIUS_Caisse:
-    main: src/AIUS_Caisse.cr
+  aius_caisse:
+    main: src/aius_caisse.cr
 
 crystal: 0.20.4
 
