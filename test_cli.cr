@@ -22,6 +22,8 @@ def ask_nicely(type, url, body)
 
 	if type == :post
 		HTTP::Client.post url, headers: headers, body: body.to_json
+	elsif type == :delete
+		HTTP::Client.delete url, headers: headers, body: body.to_json
 	else type == :get
 		HTTP::Client.get url, headers: headers
 	end
@@ -29,6 +31,10 @@ end
 
 def post(url, body)
 	ask_nicely :post, url, body
+end
+
+def delete(url, body)
+	ask_nicely :delete, url, body
 end
 
 def get(url)
@@ -70,6 +76,35 @@ while line = Readline.readline "> "
 		answer.each do |product|
 			puts "#{product["id"]}: #{product["name"]} - #{product["price"]}"
 		end
+	elsif arg[0] == "new-product"
+		if ! arg[2]?
+			puts "usage: sell <name> <price>"
+
+			next
+		end
+
+		name = arg[1].to_s
+		price = arg[2].to_f64
+
+		answer = JSON.parse post(SALES + "/products", {
+			"name" => name,
+			"price" => price,
+			"token" => token
+		}).body
+
+		puts answer
+	elsif arg[0] == "delete-product"
+		if ! arg[1]?
+			puts "usage: delete-product <id>"
+
+			next
+		end
+
+		id = arg[1].to_i
+		answer = delete(SALES + "/product/#{id}", {
+			"token" => token
+		}).body
+		puts answer
 	elsif arg[0] == "sell"
 		if ! arg[1]?
 			puts "usage: sell <id>"
@@ -80,6 +115,8 @@ while line = Readline.readline "> "
 		id = arg[1].to_i
 
 		puts "id: #{id}"
+
+
 	else
 		puts "Unknown command: #{arg[0]}"
 	end
