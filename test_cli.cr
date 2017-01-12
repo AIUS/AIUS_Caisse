@@ -67,32 +67,60 @@ else
 	exit
 end
 
+commands = Hash(String, NamedTuple(help: String, exec: Proc(Array(String), Nil))) {
+	"sales" => {
+		help: "List products on sale.",
+		exec: ->(arg : Array(String)) {
+			answer = JSON.parse get(SALES + "/products").body
+
+			answer.each do |product|
+				puts "#{product["id"]}: #{product["name"]} - #{product["price"]}"
+			end
+
+			return
+		}
+	},
+	"new-product" => {
+		help: "Add a product to the sales list.",
+		exec: ->(arg : Array(String)) {
+			if ! arg[2]?
+				puts "usage: sell <name> <price>"
+
+				return
+			end
+
+			name = arg[1].to_s
+			price = arg[2].to_f64
+
+			answer = JSON.parse post(SALES + "/products", {
+				"name" => name,
+				"price" => price,
+				"token" => token
+			}).body
+
+			puts answer
+
+			return
+		}
+	},
+}
+
+commands["help"] = {
+	help: "Lists the available commands.",
+	exec: ->(arg : Array(String)) {
+		commands.each do |command, data|
+			puts "#{command}: #{data[:help]}"
+		end
+
+		return
+	}
+}
+
 while line = Readline.readline "> "
 	arg = line.split /[ \t]+/
 
-	if arg[0] == "sales"
-		answer = JSON.parse get(SALES + "/products").body
-
-		answer.each do |product|
-			puts "#{product["id"]}: #{product["name"]} - #{product["price"]}"
-		end
-	elsif arg[0] == "new-product"
-		if ! arg[2]?
-			puts "usage: sell <name> <price>"
-
-			next
-		end
-
-		name = arg[1].to_s
-		price = arg[2].to_f64
-
-		answer = JSON.parse post(SALES + "/products", {
-			"name" => name,
-			"price" => price,
-			"token" => token
-		}).body
-
-		puts answer
+	if commands[arg[0]]?
+		commands[arg[0]][:exec].call arg
 	elsif arg[0] == "delete-product"
 		if ! arg[1]?
 			puts "usage: delete-product <id>"
