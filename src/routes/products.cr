@@ -26,7 +26,9 @@ post "/products" do |context|
 	p = context.params.json["price"]?
 	price = p.as?(Int64) || p.as?(Float64)
 
-	if name.nil?
+	if context.user.nil?
+		error "unauthorized user"
+	elsif name.nil?
 		error "missing `name` field"
 	elsif p.nil?
 		error "missing `price` field"
@@ -41,8 +43,17 @@ post "/products" do |context|
 end
 
 delete "/product/:id" do |context|
-	id = context.params.url["id"]
-	context.db.exec "DELETE FROM product WHERE id = $1", id
+	if context.user.nil?
+		error "unauthorized user"
+	else
+		# FIXME: Error-out when no product with that ID existed.
+		id = context.params.url["id"]
+		context.db.exec "DELETE FROM product WHERE id = $1", id
+
+		{
+			"status" => "ok"
+		}.to_json
+	end
 end
 
 put "/product/:id" do |context|

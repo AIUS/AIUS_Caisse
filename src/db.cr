@@ -11,7 +11,7 @@ class HTTP::Server::Context
 	end
 end
 
-class CustomHandler < Kemal::Handler
+class DBHandler < Kemal::Handler
 	def call(context)
 		DB.open "postgres:///aius_caisse" do |db|
 			context.db = db
@@ -21,6 +21,6 @@ class CustomHandler < Kemal::Handler
 	end
 end
 
-add_handler CustomHandler.new
+add_handler DBHandler.new
 
 
