@@ -10,7 +10,9 @@ post "/sale/" do |context|
 	#		]
 	#}
 	sale_products = context.params.json["data"]?.as?(Array(JSON::Type))
-	if sale_products.nil?
+	if context.user.nil?
+		error "unauthorized user"
+	elsif sale_products.nil?
 		error "Incorrect JSON"	
 	else
 		ids = [] of Int64
