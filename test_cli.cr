@@ -5,6 +5,8 @@ require "readline"
 OTAN = "https://otan.aius.u-strasbg.fr"
 SALES = "http://localhost:3000"
 
+token = nil
+
 STDIN << "Login: "
 STDIN.flush
 login = STDIN.read_line
@@ -17,10 +19,6 @@ def ask_nicely(type, url, body)
 	headers = HTTP::Headers {
 		"Content-Type" => "application/json"
 	}
-
-	if ! token.nil?
-		
-	end
 
 	if type == :post
 		HTTP::Client.post url, headers: headers, body: body.to_json
@@ -41,8 +39,6 @@ response = post OTAN + "/token", {
 	"username" => login,
 	"password" => password,
 }
-
-token = nil
 
 if response.status_code == 200
 	response = JSON.parse response.body
