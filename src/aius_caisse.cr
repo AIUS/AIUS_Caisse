@@ -9,6 +9,7 @@ end
 
 require "./routes/products"
 require "./routes/categories"
+require "./routes/sale"
 
 Kemal.run
 
