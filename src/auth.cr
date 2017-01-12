@@ -13,20 +13,17 @@ class AuthHandler < Kemal::Handler
 		headers = HTTP::Headers {
 			"Content-Type" => "applicaton/json"
 		}
-		url = "https://otan.aius.u-strasbg.fr/token"
+		url = Kemal.config.aius_otan + "/token"
 
 		token = context.params.json["token"]?
 
 		if token.nil?
-			puts "No token received."
-
+			# No token received.
 			return call_next context
 		end
 
 		response = HTTP::Client.get "#{url}/#{token}", headers: headers
 		response = JSON.parse response.body
-
-		puts response
 
 		username = response["username"]?
 		scopes = response["scopes"]?
@@ -51,8 +48,7 @@ class AuthHandler < Kemal::Handler
 			return call_next context
 		end
 
-		puts scopes
-		if scopes.includes? "sales"
+		if scopes.includes? Kemal.config.aius_scope
 			context.user = username
 		end
 
