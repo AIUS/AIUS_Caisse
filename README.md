@@ -1,4 +1,4 @@
-# aius_caisse — Une micro-caisse pour une grande association
+# `aius-salesd` — Une micro-caisse pour une grande association
 
 Caisse pour l’AIUS écrite en Crystal.
 
@@ -11,14 +11,14 @@ Caisse pour l’AIUS écrite en Crystal.
 
 ## Utilisation
 
-Pour compiler : 
+Pour compiler :
 
 	crystal deps build
 
-Pour exécuter : 
+Pour exécuter :
 
 	$ ./bin/aius_caisse --help
-	
+
 	    -b HOST, --bind HOST             Host to bind (defaults to 0.0.0.0)
 	    -p PORT, --port PORT             Port to listen for connections (defaults to 3000)
 	    -s, --ssl                        Enables SSL

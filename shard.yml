@@ -1,12 +1,12 @@
-name: AIUS_Caisse
+name: aius-salesd
 version: 0.1.0
 
 authors:
   - caswitch <mariefrance.kom@gmail.com>
 
 targets:
-  aius_caisse:
-    main: src/aius_caisse.cr
+  aius-salesd:
+    main: src/aius-salesd.cr
 
 crystal: 0.20.4
 
