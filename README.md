@@ -29,25 +29,14 @@ Pour exécuter :
 	$ ./bin/aius_caisse
 	[development] Kemal is ready to lead at http://0.0.0.0:3000
 
-	^C
 	Kemal is going to take a rest!
 
 
 ## API REST
 
-### `GET /products`
-* Retourne la liste des produits.
-* Chaque produit est sous la forme :
-```json
-{
-	"id": "<Int32>",
-	"name": "<String>",
-	"price": "<Float64>"
-}
-```
-
 ### `POST /products`
-* Entre un nouveau produit dans la liste des produits et retourne les informations de ce produit.
+* Créé un nouveau produit dans la liste des produits mis en vente.
+* Retourne les informations de ce nouveau produit.
 * Entrée :
 ```json
 {
@@ -56,21 +45,41 @@ Pour exécuter :
 	"price": "<Float64>"
 }
 ```
+* Sortie :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>",
+	"price": "<Float64>"
+}
+```
+
+### `GET /products`
+* Liste de tous les produits mis en vente.
+* Sortie :
+```json
+[{
+	"id": "<Int32>",
+	"name": "<String>",
+	"price": "<Float64>"
+}, 
+...
+]
+```
 
 ### `GET /product/:id`
-* Retourne les informations du produit dont on entre l'id.
+* Retourne les informations du produit dont l'id correspond, de la liste des produits mis en vente (si ce produit existe dans cette liste).
+* Sortie :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>",
+	"price": "<Float64>"
+}
+```
 
 ### `DELETE /product/:id`
-* Supprime le produit, dont l'id correspond, de la liste.
-* Retourne :
-  - si la suppression a réussi :
-```json
-DB::ExecResult(@rows_affected=1, @last_insert_id=0
-```
-  - sinon :
-```json
-	DB::ExecResult(@rows_affected=0, @last_insert_id=0)
-```
+* Supprime le produit, dont l'id correspond, de la liste des produits mis en vente (si ce produit existe dans cette liste).
 
 ### `PUT /product/:id`
 * Modifie les informations du produit dont l'id correspond.
@@ -82,10 +91,25 @@ DB::ExecResult(@rows_affected=1, @last_insert_id=0
 	"price"?: "<Float64>"
 }
 ```
+* Sortie :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>",
+	"price": "<Float64>"
+}
+```
 
-### `GET /categories`
-* Retourne la liste des catégories.
-* Une catégorie est sous la forme :
+### `POST /categories`
+* Créé une nouvelle catégorie dans la liste des catégories des produits mis en vente et des services proposés.
+* Retourne les informations de cette nouvelle catégorie.
+* Entrée :
+```json
+{
+	"name: "<String>"
+}
+```
+* Sortie :
 ```json
 {
 	"id": "<Int32>",
@@ -93,29 +117,30 @@ DB::ExecResult(@rows_affected=1, @last_insert_id=0
 }
 ```
 
-### `GET /category/:id`
-* Retourne les informations de la catégorie dont on entre l'id ou une erreure 404 si l'id n'existe pas.
+### `GET /categories`
+* Retourne la liste des catégories des produites mis en vente et des services proposés.
+* Sortie :
+```json
+[{
+	"id": "<Int32>",
+	"name": "<String>"
+},
+...
+]
+```
 
-### `POST /categories`
-* Entre une nouvelle catégorie dans la liste des catégories et retourne les informations de cettes catégorie.
-* Entrée :
+### `GET /category/:id`
+* Retourne les informations de la catégorie dont l'id correspond, de la liste des catégorires des produits mis en vente et des services proposés (si ce produit/service existe dans cette liste).
+* Sortie :
 ```json
 {
-	"name: "<String>"
+	"id": "<Int32>",
+	"name": "<String>"
 }
 ```
 
 ### `DELETE /category/:id`
-* Supprime la catégorie, dont l'id correspond, de la liste.
-* Retourne : 
-  - si la suppression a réussi :
-```json
-DB::ExecResult(@rows_affected=1, @last_insert_id=0
-```
-  - sinon :
-```json
-	DB::ExecResult(@rows_affected=0, @last_insert_id=0)
-```
+* Supprime la catégorie, dont l'id correspond, de la liste des catégories des produits mis en vente et services proposés (si ce produit/service existe dans cette liste).
 
 ### `PUT /category/:id`
 * Modifie les informations de la catégorie dont l'id correspond.
@@ -125,8 +150,17 @@ DB::ExecResult(@rows_affected=1, @last_insert_id=0
 	"name": "<String>",
 }
 ```
+* Sortie :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>"
+}
+```
 
 ### `POST /sale`
+* Enregistre une vente dans la liste des ventes.
+* Entrée :
 ```json
 {
 	data :
