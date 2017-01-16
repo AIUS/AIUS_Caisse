@@ -36,16 +36,107 @@ Pour exécuter :
 ## API REST
 
 ### `GET /products`
+* Retourne la liste des produits.
+* Chaque produit est sous la forme :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>",
+	"price": "<Float64>"
+}
+```
 
 ### `POST /products`
+* Entre un nouveau produit dans la liste des produits et retourne les informations de ce produit.
+* Entrée :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>",
+	"price": "<Float64>"
+}
+```
 
 ### `GET /product/:id`
+* Retourne les informations du produit dont on entre l'id.
 
 ### `DELETE /product/:id`
+* Supprime le produit, dont l'id correspond, de la liste.
+* Retourne :
+  - si la suppression a réussi :
+```json
+DB::ExecResult(@rows_affected=1, @last_insert_id=0
+```
+  - sinon :
+```json
+	DB::ExecResult(@rows_affected=0, @last_insert_id=0)
+```
 
 ### `PUT /product/:id`
+* Modifie les informations du produit dont l'id correspond.
+* Entrée :
+```json
+{
+	"id"?: "<Int32>",
+	"name"?: "<String>",
+	"price"?: "<Float64>"
+}
+```
 
 ### `GET /categories`
+* Retourne la liste des catégories.
+* Une catégorie est sous la forme :
+```json
+{
+	"id": "<Int32>",
+	"name": "<String>"
+}
+```
+
+### `GET /category/:id`
+* Retourne les informations de la catégorie dont on entre l'id ou une erreure 404 si l'id n'existe pas.
+
+### `POST /categories`
+* Entre une nouvelle catégorie dans la liste des catégories et retourne les informations de cettes catégorie.
+* Entrée :
+```json
+{
+	"name: "<String>"
+}
+```
+
+### `DELETE /category/:id`
+* Supprime la catégorie, dont l'id correspond, de la liste.
+* Retourne : 
+  - si la suppression a réussi :
+```json
+DB::ExecResult(@rows_affected=1, @last_insert_id=0
+```
+  - sinon :
+```json
+	DB::ExecResult(@rows_affected=0, @last_insert_id=0)
+```
+
+### `PUT /category/:id`
+* Modifie les informations de la catégorie dont l'id correspond.
+* Entrée :
+```json
+{
+	"name": "<String>",
+}
+```
+
+### `POST /sale`
+```json
+{
+	data :
+		[{
+			"id": "<id>",
+			"quantity": "<quantity>"
+		},
+		...
+}
+```
 
 ## Développement
 
