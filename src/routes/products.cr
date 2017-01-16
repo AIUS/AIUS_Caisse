@@ -13,7 +13,8 @@ end
 
 get "/product/:id" do |context|
 	id = context.params.url["id"]
-	product = context.db.query_one "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
+	product = context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
+
 	if product.nil?
 		error "product not found"
 	else
@@ -24,6 +25,7 @@ end
 post "/products" do |context|
 	name = context.params.json["name"]?.as?(String)
 	p = context.params.json["price"]?
+	category = context.params.json["category"]?
 	price = p.as?(Int64) || p.as?(Float64)
 
 	if context.user.nil?
@@ -37,8 +39,8 @@ post "/products" do |context|
 	elsif price < 0
 		error "`price` can't be < 0"
 	else
-		new_id = context.db.scalar "INSERT INTO product (name, price) VALUES ($1, $2) RETURNING id", name, price
-		(context.db.query_one "SELECT id, name, category, price FROM product WHERE id = $1", new_id, as: Product).to_json
+		new_id = context.db.scalar "INSERT INTO product (name, category, price) VALUES ($1, $2, $3) RETURNING id", name, category, price
+		(context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", new_id, as: Product).to_json
 	end
 end
 
@@ -48,17 +50,22 @@ delete "/product/:id" do |context|
 	else
 		# FIXME: Error-out when no product with that ID existed.
 		id = context.params.url["id"]
-		context.db.exec "DELETE FROM product WHERE id = $1", id
+		product = context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
+		if product.nil?
+			error "product not found"
+		else
+			context.db.exec "DELETE FROM product WHERE id = $1", id
 
-		{
-			"status" => "ok"
-		}.to_json
+			{
+				"status" => "ok"
+			}.to_json
+		end
 	end
 end
 
 put "/product/:id" do |context|
 	id = context.params.url["id"]
-	product = context.db.query_one "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
+	product = context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
 	if product.nil?
 		error "product not found"
 	else
