@@ -3,6 +3,7 @@ require "kemal"
 
 require "./db"
 require "./auth"
+require "./json"
 
 get "/" do |context|
 	context.db.to_s
