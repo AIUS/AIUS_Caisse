@@ -1,7 +1,6 @@
 require "../sale"
 
-get "/sale/" do |context|
-	
+get "/sale/" do |context|	
 	begin
 		dbegin = context.params.query["begin"]?.as?(String)
 		if dbegin.nil?
@@ -20,25 +19,13 @@ get "/sale/" do |context|
 	end
 
 	sales = Sale.from_rs(context.db.query "SELECT id,seller,date FROM sale WHERE $1::date < date and date <= $2::date ",dbegin,dend)
-	i = 0
-	while i < sales.size
-		sales[i].searchProduct(context.db)
-		i += 1
+	sales.map do |sale|
+		sale.searchProduct(context.db)
 	end
 	sales.to_json
 end 
 
 post "/sale/" do |context|
-	#{ 
-	#	data :
-	#		[ 
-	#			{
-	#				id : 4545
-	#				quantity : 4546
-	#			},
-	#			...
-	#		]
-	#}
 	sale_products = context.params.json["data"]?.as?(Array(JSON::Type))
 	if context.user.nil?
 		error "unauthorized user"

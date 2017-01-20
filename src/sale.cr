@@ -2,7 +2,7 @@
 require "db"
 
 class Sale
-	@sale_products = [] of Sale_product
+	@sale_products = [] of SaleProduct
 	def	seller=(@seller) end#FIXME test uuid
 	
 	def <<(pd)
@@ -12,7 +12,7 @@ class Sale
 			@sale_products << pd
 	end
 
-	def <<(pd : Array(Sale_product))
+	def <<(pd : Array(SaleProduct))
 		i = 0
 		while i < pd.size
 			self<< pd[i]
@@ -21,7 +21,7 @@ class Sale
 	end
 
 	def searchProduct(db)
-		self<< (Sale_product.from_rs(db.query "SELECT sale, product, quantity FROM sale_product WHERE sale = $1",@id))
+		self<< (SaleProduct.from_rs(db.query "SELECT sale, product, quantity FROM sale_product WHERE sale = $1",@id))
 	end
 
 	DB.mapping({
@@ -33,12 +33,12 @@ class Sale
 	JSON.mapping({
 		id: Int32,
 		seller: String,
-		sale_products: Array(Sale_product),
+		sale_products: Array(SaleProduct),
 		date: Time
 	})
 end
 
-class Sale_product
+class SaleProduct
 	def sale=(@sale) end
 	def product=(@sale) end
 	def quantity=(qt)
