@@ -42,6 +42,7 @@ Pour exécuter :
 {
 	"id": "<Int32>",
 	"name": "<String>",
+	"category"?: "<Int32> | Nil"
 	"price": "<Float64>"
 }
 ```
@@ -50,6 +51,7 @@ Pour exécuter :
 {
 	"id": "<Int32>",
 	"name": "<String>",
+	"category"?: "<Int32> | Nil"
 	"price": "<Float64>"
 }
 ```
@@ -61,6 +63,7 @@ Pour exécuter :
 [{
 	"id": "<Int32>",
 	"name": "<String>",
+	"category"?: "<Int32> | Nil"
 	"price": "<Float64>"
 }, 
 ...
@@ -74,12 +77,26 @@ Pour exécuter :
 {
 	"id": "<Int32>",
 	"name": "<String>",
+	"category"?: "<Int32> | Nil"
 	"price": "<Float64>"
 }
 ```
 
 ### `DELETE /product/:id`
 * Supprime le produit, dont l'id correspond, de la liste des produits mis en vente (si ce produit existe dans cette liste).
+* Sortie (si l'id correspond à celui d'un produit existant dans la li des produits mis en ventes)
+```json
+{
+	"status": ok
+}
+```
+ou
+```json
+{
+	"status":"error",
+	"message":"product not found"
+}
+```
 
 ### `PUT /product/:id`
 * Modifie les informations du produit dont l'id correspond.
@@ -88,6 +105,7 @@ Pour exécuter :
 {
 	"id"?: "<Int32>",
 	"name"?: "<String>",
+	"category"?: "<Int32> | Nil"
 	"price"?: "<Float64>"
 }
 ```
@@ -96,6 +114,7 @@ Pour exécuter :
 {
 	"id": "<Int32>",
 	"name": "<String>",
+	"category"?: "<Int32> | Nil"
 	"price": "<Float64>"
 }
 ```
@@ -106,7 +125,7 @@ Pour exécuter :
 * Entrée :
 ```json
 {
-	"name: "<String>"
+	"name": "<String>"
 }
 ```
 * Sortie :
@@ -164,11 +183,13 @@ Pour exécuter :
 ```json
 {
 	data :
-		[{
-			"id": "<id>",
-			"quantity": "<quantity>"
-		},
+		[
+			{
+				"id": "<id>",
+				"quantity": "<quantity>"
+			},
 		...
+		]
 }
 ```
 

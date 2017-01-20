@@ -48,18 +48,17 @@ delete "/product/:id" do |context|
 	if context.user.nil?
 		error "unauthorized user"
 	else
-		# FIXME: Error-out when no product with that ID existed.
 		id = context.params.url["id"]
-		product = context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
-		if product.nil?
+		result = context.db.exec "DELETE FROM product WHERE id = $1", id
+
+		if result.rows_affected == 0
 			error "product not found"
 		else
-			context.db.exec "DELETE FROM product WHERE id = $1", id
-
 			{
 				"status" => "ok"
 			}.to_json
 		end
+
 	end
 end
 

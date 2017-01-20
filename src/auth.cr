@@ -15,13 +15,17 @@ class AuthHandler < Kemal::Handler
 		}
 		url = Kemal.config.aius_otan + "/token"
 
-		token = context.params.json["token"]?
+		# token = context.params.json["token"]?
+		token = context.request.headers["X-Token"]?
 
 		if token.nil?
 			# No token received.
+			puts "no token found"
 			return call_next context
+		else
+			puts token
 		end
-
+		puts "#{url}/#{token}"
 		response = HTTP::Client.get "#{url}/#{token}", headers: headers
 		response = JSON.parse response.body
 
