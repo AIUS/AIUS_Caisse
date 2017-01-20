@@ -1,5 +1,33 @@
 require "../sale"
 
+get "/sale/" do |context|
+	
+	begin
+		dbegin = context.params.query["begin"]?.as?(String)
+		if dbegin.nil?
+			dbegin = Time.parse("1995-04-24","%Y-%m-%d")
+		else
+			dbegin = Time.parse(dbegin,"%Y-%m-%d")
+		end
+		dend = context.params.query["end"]?.as?(String)
+		if dend.nil?
+			dend = Time.now()
+		else
+			dend = Time.parse(dend,"%Y-%m-%d")
+		end
+	rescue
+		next error "Syntax Date incorect"
+	end
+
+	sales = Sale.from_rs(context.db.query "SELECT id,seller,date FROM sale WHERE $1::date < date and date <= $2::date ",dbegin,dend)
+	i = 0
+	while i < sales.size
+		sales[i].searchProduct(context.db)
+		i += 1
+	end
+	sales.to_json
+end 
+
 post "/sale/" do |context|
 	#{ 
 	#	data :
@@ -80,3 +108,5 @@ delete "/sale/:id" do |context|
 		}.to_json
 	end
 end
+
+
