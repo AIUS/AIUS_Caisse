@@ -84,15 +84,11 @@ end
 
 delete "/sale/:id" do |context|
 	id = context.params.url["id"]
-	if (context.db.query_one? "SELECT id FROM sale WHERE id = $1",id, as: Int32).nil?
-		error "Sale not found"
+	context.db.exec "DELETE FROM sale_product WHERE sale=$1",id
+	if (context.db.exec "DELETE FROM sale WHERE id=$1",id).rows_affected > 0
+		{	"status" => "OK"}.to_json
 	else
-		context.db.exec "DELETE FROM sale_product WHERE sale=$1",id
-		context.db.exec "DELETE FROM sale WHERE id=$1",id
-		
-		{
-			"status" => "OK"
-		}.to_json
+		error "No row affected."
 	end
 end
 
