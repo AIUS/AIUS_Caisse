@@ -35,9 +35,22 @@ post "/categories" do |context|
 	end
 end
 
-delete "/category/:id" do |context|
-	id = context.params.url["id"]
-	context.db.exec "DELETE FROM product_category WHERE id = $1", id
+delete "/catgory/:id" do |context|
+	if context.user.nil?
+		error "unauthorized user"
+	else
+		id = context.params.url["id"]
+		result = context.db.exec "DELETE FROM product_category WHERE id = $1", id
+
+		if result.rows_affected == 0
+			error "category not found"
+		else
+			{
+				"status" => "ok"
+			}.to_json
+		end
+
+	end
 end
 
 put "/category/:id" do |context|
