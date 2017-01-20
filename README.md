@@ -208,19 +208,72 @@ Pour exécuter :
 }
 ```
 
+### `GET /sale?begin="%Y-%m-%d"&end="%Y-%m-%d"`
+
+Renvoie la liste des vente entre deux date.
+
+Entrée :
+* begin	: Date du debut de l'intervalle. Defaut : "1995-04-24"
+* end 	: Date de fin de l'intervalle Defaut : Time.now()
+
+Sortie :
+```json
+[
+	{
+		id: "<id>"
+		seller: "<uuid>"
+		sale_products: [
+				{
+					product: "<id>"
+					quantity: "<Int32>"
+				},
+				...
+			]
+		date: "<date>"
+	},
+	...
+]
+```
+
 ### `POST /sale`
-* Enregistre une vente dans la liste des ventes.
-* Entrée :
+
+Enregistre une vente dans la base de donnée.
+
+Entrée :
 ```json
 {
 	data :
 		[
 			{
 				"id": "<id>",
-				"quantity": "<quantity>"
+				"quantity": "<Int32>"
 			},
 		...
 		]
+}
+```
+
+Sortie
+```json
+{
+	id: "<id>"
+	seller: "<uuid>"
+	sale_products: []
+	date: "<date>"
+}
+```
+
+### `DELETE /sale/:id`
+
+Supprime une vente.
+
+Sortie :
+```json
+{ status: "OK" }
+ou si il y a une erreur
+{ 
+	status: "error",
+	message: "No row affected" 
 }
 ```
 
