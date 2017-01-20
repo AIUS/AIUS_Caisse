@@ -72,7 +72,8 @@ Pour exécuter :
 
 ### `GET /product/:id`
 * Retourne les informations du produit dont l'id correspond, de la liste des produits mis en vente (si ce produit existe dans cette liste).
-* Sortie :
+* Sorties :
+ - si l'id correspond à celui d'un produit existant dans la liste des produits mis en ventes
 ```json
 {
 	"id": "<Int32>",
@@ -81,20 +82,27 @@ Pour exécuter :
 	"price": "<Float64>"
 }
 ```
+ - si l'id ne correspond à celui d'un produit existant dans la liste des produits mis en ventes
+```json
+{
+	"status": "error",
+	"message": "product not found"}
+```
 
 ### `DELETE /product/:id`
 * Supprime le produit, dont l'id correspond, de la liste des produits mis en vente (si ce produit existe dans cette liste).
-* Sortie (si l'id correspond à celui d'un produit existant dans la li des produits mis en ventes)
+* Sorties :
+ - si l'id correspond à celui d'un produit existant dans la liste des produits mis en ventes
 ```json
 {
 	"status": ok
 }
 ```
-ou
+ - si l'id ne correspond à celui d'un produit existant dans la liste des produits mis en ventes
 ```json
 {
-	"status":"error",
-	"message":"product not found"
+	"status": "error",
+	"message": "product not found"
 }
 ```
 
@@ -150,16 +158,39 @@ ou
 
 ### `GET /category/:id`
 * Retourne les informations de la catégorie dont l'id correspond, de la liste des catégorires des produits mis en vente et des services proposés (si ce produit/service existe dans cette liste).
-* Sortie :
+* Sorties :
+ - si l'id correspond à celui d'une catégorie existante dans la liste des catégories des produits mis en ventes et services proposés
+
 ```json
 {
 	"id": "<Int32>",
 	"name": "<String>"
 }
 ```
+ - si l'id ne correspond pas à celui d'une catégorie existante dans la liste des catégories des produits mis en ventes et services proposés
+ ```json
+{
+	"status": "error",
+	"message": "category not found"
+}
+ ```
 
 ### `DELETE /category/:id`
 * Supprime la catégorie, dont l'id correspond, de la liste des catégories des produits mis en vente et services proposés (si ce produit/service existe dans cette liste).
+* Sorties :
+ - si l'id correspond à celui d'une catégorie existante dans la liste des catégories des produits mis en ventes et services proposés
+ ```json
+{
+	"status": "ok"
+}
+ ```
+ - si l'id ne correspond pas à celui d'une catégorie existante dans la liste des catégories des produits mis en ventes et services proposés
+ ```json
+{
+	"status": "error",
+	"message": "category not found"
+}
+ ```
 
 ### `PUT /category/:id`
 * Modifie les informations de la catégorie dont l'id correspond.
