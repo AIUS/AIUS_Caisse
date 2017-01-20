@@ -1,3 +1,5 @@
+require "../sale"
+
 post "/sale/" do |context|
 	#{ 
 	#	data :
@@ -60,5 +62,21 @@ post "/sale/" do |context|
 				end
 			end
 		end
+
+	 	(context.db.query_one? "SELECT id,seller,date FROM sale WHERE id = $1",sale,as: Sale).to_json
+	end
+end
+
+delete "/sale/:id" do |context|
+	id = context.params.url["id"]
+	if (context.db.query_one? "SELECT id FROM sale WHERE id = $1",id, as: Int32).nil?
+		error "Sale not found"
+	else
+		context.db.exec "DELETE FROM sale_product WHERE sale=$1",id
+		context.db.exec "DELETE FROM sale WHERE id=$1",id
+		
+		{
+			"status" => "OK"
+		}.to_json
 	end
 end
