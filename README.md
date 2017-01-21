@@ -213,23 +213,23 @@ Pour exécuter :
 Renvoie la liste des vente entre deux date.
 
 Entrée :
-* begin	: Date du debut de l'intervalle. Defaut : "1995-04-24"
-* end 	: Date de fin de l'intervalle Defaut : Time.now()
+* begin	: Date du debut de l'intervalle. Valeur par défaut : "1995-04-24"
+* end 	: Date de fin de l'intervalle. Valeur par défaut : Time.now()
 
 Sortie :
 ```json
 [
 	{
-		id: "<id>"
-		seller: "<uuid>"
-		sale_products: [
+		"id": "<id>"
+		"seller": "<uuid>"
+		"sale_products": [
 				{
-					product: "<id>"
-					quantity: "<Int32>"
+					"product": "<id>"
+					"quantity": "<Int32>"
 				},
 				...
 			]
-		date: "<date>"
+		"date": "<date>"
 	},
 	...
 ]
@@ -242,7 +242,7 @@ Enregistre une vente dans la base de donnée.
 Entrée :
 ```json
 {
-	data :
+	"data" :
 		[
 			{
 				"id": "<id>",
@@ -256,10 +256,10 @@ Entrée :
 Sortie
 ```json
 {
-	id: "<id>"
-	seller: "<uuid>"
-	sale_products: []
-	date: "<date>"
+	"id": "<id>"
+	"seller": "<uuid>"
+	"sale_products": []
+	"date": "<date>"
 }
 ```
 
@@ -269,11 +269,15 @@ Supprime une vente.
 
 Sortie :
 ```json
-{ status: "OK" }
+{
+	"status": "OK"
+}
+
 ou si il y a une erreur
+
 { 
-	status: "error",
-	message: "No row affected" 
+	"status": "error",
+	"message": "No row affected" 
 }
 ```
 
