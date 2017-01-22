@@ -220,15 +220,15 @@ Sortie :
 ```json
 [
 	{
-		"id": "<id>"
-		"seller": "<uuid>"
+		"id": "<id>",
+		"seller": "<uuid>",
 		"sale_products": [
 				{
-					"product": "<id>"
+					"product": "<id>",
 					"quantity": "<Int32>"
 				},
 				...
-			]
+			],
 		"date": "<date>"
 	},
 	...
@@ -255,12 +255,17 @@ Entrée :
 
 Sortie
 ```json
-{
-	"id": "<id>"
-	"seller": "<uuid>"
-	"sale_products": []
-	"date": "<date>"
+{ 
+	"status": "OK"
 }
+
+ou s'il y a une erreur
+
+{
+	"status": "error",
+	"message": "<String>"
+}
+
 ```
 
 ### `DELETE /sale/:id`
@@ -273,7 +278,7 @@ Sortie :
 	"status": "OK"
 }
 
-ou si il y a une erreur
+ou s'il y a une erreur
 
 { 
 	"status": "error",
