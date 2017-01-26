@@ -8,25 +8,17 @@ require "../error"
 require "../product"
 
 get "/products" do |context|
-	if context.user.nil?
-		error "unauthorized user"
-	else
-		Product.from_rs(context.db.query "SELECT id, name, category, price FROM product").to_json
-	end
+	Product.from_rs(context.db.query "SELECT id, name, category, price FROM product").to_json
 end
 
 get "/product/:id" do |context|
-	if context.user.nil?
-		error "unauthorized user"
-	else
-		id = context.params.url["id"]
-		product = context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
+	id = context.params.url["id"]
+	product = context.db.query_one? "SELECT id, name, category, price FROM product WHERE id = $1", id, as: Product
 
-		if product.nil?
-			error "product not found"
-		else
-			product.to_json	
-		end
+	if product.nil?
+		error "product not found"
+	else
+		product.to_json	
 	end
 end
 

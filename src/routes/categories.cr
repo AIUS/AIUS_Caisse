@@ -8,24 +8,16 @@ require "../error"
 require "../categories"
 
 get "/categories" do |context|
-	if context.user.nil?
-		error "unauthorized user"
-	else
-		Category.from_rs(context.db.query "SELECT id, name FROM product_category").to_json
-	end
+	Category.from_rs(context.db.query "SELECT id, name FROM product_category").to_json
 end
 
 get "/category/:id" do |context|
-	if context.user.nil?
-		error "unauthorized user"
+	id = context.params.url["id"]
+	category =  context.db.query_one? "SELECT id, name FROM product_category WHERE id = $1", id, as: Category
+	if category.nil?
+		error "category not found"
 	else
-		id = context.params.url["id"]
-		category =  context.db.query_one? "SELECT id, name FROM product_category WHERE id = $1", id, as: Category
-		if category.nil?
-			error "category not found"
-		else
-			category.to_json	
-		end
+		category.to_json	
 	end
 end
 
