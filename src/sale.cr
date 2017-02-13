@@ -6,44 +6,41 @@ class Sale
 	@saleProducts = [] of SaleProduct
 	@date = Time.now
 	def initialize(s)
-		self.seller=s
+		self.seller = s
 	end
 	def	seller=(@seller) end#FIXME test uuid
 	def id=(@id)end
-	def id 
-		@id 
-	end
 
 	def <<(pd)
-		if @saleProducts.any? { |saleProduct| saleProduct.product = pd.product}
-			raise "Already id of product."
+		if @saleProducts.any? { |saleProduct| saleProduct.product == pd.product}
+			raise "Multiple id of product : #{pd.product}"
 		end
 			@saleProducts << pd
 	end
 
 	def <<(pds : Array(SaleProduct))
-		pds.each {|pd| self<< pd}
+		pds.each {|pd| self << pd}
 	end
 
 	def <<(pds : Array(JSON::Type))
-		pds.each { |pd|	self<< SaleProduct.new(pd)}
+		pds.each { |pd|	self << SaleProduct.new(pd)}
 	end
-	
+
 	def searchProduct(db)
-		self<< (SaleProduct.from_rs(db.query "SELECT sale, product, quantity FROM sale_product WHERE sale = $1",@id))
+		self << (SaleProduct.from_rs(db.query "SELECT sale, product, quantity FROM sale_product WHERE sale = $1",@id))
 	end
 
 	def save(db)
-		@saleProducts.each do |pd| 
-			if pd.isNotInDB(db)
-				raise "Product not found."
+		@saleProducts.each do |pd|
+			if pd.notInDB?(db)
+				raise "Product not found in the DB."
 			end
 		end
 		id = (db.scalar "INSERT INTO sale (seller) VALUES ($1) RETURNING id", @seller).as?(Int32)
 		if !id.nil?
-			@id=id
+			@id = id
 			@saleProducts.each do |pd|
-				pd.sale= @id
+				pd.sale = @id
 				pd.save(db)
 			end
 		end
@@ -79,8 +76,8 @@ class SaleProduct
 			elsif qt.nil?
 				raise "No quantity of product."
 			else
-				self.product=id.to_i
-				self.quantity=qt.to_i
+				self.product = id.to_i
+				self.quantity = qt.to_i
 			end
 		end
 	end
@@ -94,7 +91,7 @@ class SaleProduct
 		@quantity=qt
 	end
 
-	def isNotInDB(db)
+	def notInDB?(db)
 		(db.query_one? "SELECT id FROM product WHERE id = $1", @product, as: Int32).nil?
 	end
 
@@ -111,6 +108,6 @@ class SaleProduct
 	JSON.mapping({
 		sale: Int32,
 		product: Int32,
-		quantity: Int32	
+		quantity: Int32
 	})
 end
