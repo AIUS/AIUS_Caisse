@@ -21,8 +21,8 @@ get "/sale/" do |context|
 		next error "syntax error."
 	end
 
-	sales = Sale.from_rs(context.db.query
-											 	"SELECT id,seller,date
+	sales = Sale.from_rs(context.db.query	"
+												SELECT id,seller,date
 												FROM sale
 												WHERE $1::date < date and date <= $2::date",
 												dbegin,dend)
@@ -55,12 +55,12 @@ end
 
 delete "/sale/:id" do |context|
 	id = context.params.url["id"]
-	context.db.exec
-		"DELETE FROM sale_product
+	context.db.exec	"
+		DELETE FROM sale_product
 		WHERE sale = $1",id
 
-	if ( context.db.exec
-				"DELETE FROM sale
+	if ( context.db.exec "
+				DELETE FROM sale
 				WHERE id = $1",id)
 			.rows_affected > 0
 		{	"status" => "OK"}.to_json

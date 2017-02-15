@@ -3,7 +3,7 @@ require "db"
 class Sale
 	@id = 0
 	@seller = ""
-	@saleProducts = [] of SaleProduct
+	@saleProducts = [] of Product
 	@date = Time.now
 
 	def initialize ( s )
@@ -14,25 +14,25 @@ class Sale
 
 	def id= ( @id ) end
 
-	def << ( pd : SaleProduct )
+	def << ( pd : Product )
 		if @saleProducts.any? { |saleProduct| saleProduct.product == pd.product }
 			raise "multiple id of product : #{ pd.product }"
 		end
 			@saleProducts << pd
 	end
 
-	def << ( pds : Array( SaleProduct ) )
+	def << ( pds : Array( Product ) )
 		pds.each { |pd| self << pd }
 	end
 
 	def << ( pds : Array( JSON::Type ) )
-		pds.each { |pd|	self << SaleProduct.new( pd ) }
+		pds.each { |pd|	self << Product.new( pd ) }
 	end
 
 	def searchProduct( db )
-		self << ( SaleProduct.from_rs(
-			db.query
-				"SELECT sale, product, quantity
+		self << ( Product.from_rs(
+			db.query "
+				SELECT sale, product, quantity
 				FROM sale_product
 				WHERE sale = $1",
 			@id
@@ -46,8 +46,8 @@ class Sale
 			end
 		end
 
-		id = ( db.scalar
-						"INSERT INTO sale (seller)
+		id = ( db.scalar "
+						INSERT INTO sale (seller)
 						VALUES ($1) RETURNING id",
 					@seller ).as?( Int32 )
 
@@ -69,12 +69,12 @@ class Sale
 	JSON.mapping({
 		id: Int32,
 		seller: String,
-		saleProducts: Array( SaleProduct ),
+		saleProducts: Array( Product ),
 		date: Time
 	})
 end
 
-class SaleProduct
+class Sale::Product
 	@sale = 0
 	@product = 0
 	@quantity = 0
@@ -111,17 +111,18 @@ class SaleProduct
 	end
 
 	def notInDB?( db )
-		( db.query_one?
-			"SELECT id
-			FROM product
-			WHERE id = $1",
+		( db.query_one? "
+				SELECT id
+				FROM product
+				WHERE id = $1",
 			@product,
-		as: Int32).nil?
+			as: Int32
+		).nil?
 	end
 
 	def save(db)
-		db.exec
-			"INSERT INTO sale_product (sale, product, quantity)
+		db.exec "
+			INSERT INTO sale_product (sale, product, quantity)
 			VALUES ($1,$2,$3)",
 			@sale,@product, @quantity
 	end
